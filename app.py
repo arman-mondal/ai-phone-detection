@@ -11,19 +11,27 @@ def play_alert():
     sound = AudioSegment.from_file("alert.mp3")
     play(sound)
 
+# Check if MPS (Metal Performance Shaders) is available for GPU acceleration
+# and set the device accordingly
+if torch.backends.mps.is_available():
+    print("Using MPS for GPU acceleration.")
+else:
+    print("MPS not available, using CPU.")
+# Set the device to MPS if available, otherwise use CPU
+
+
 device = "mps" if torch.backends.mps.is_available() else "cpu"
 
-# Model selection
+
 model = YOLO("yolo12n.pt") 
 
-# PHONE ID IS 67 IN DATASET
 PHONE_CLASS_ID = 67  
 PERSON_CLASS_ID = 0  
 
 cap = cv2.VideoCapture(0)
 
-phone_detected_start_time = None  # To track when the phone was first detected
-ALERT_THRESHOLD = 10  # Seconds
+phone_detected_start_time = None  
+ALERT_THRESHOLD = 10  
 
 while cap.isOpened():
     ret, frame = cap.read()
